@@ -2,17 +2,18 @@ import kotlin.test.*
 
 class BasicTestStack {
     @Test
-    fun `test stack`() {
-        val stk = MutableStack<Char>()
-        assertTrue(stk.isEmpty())
-        stk.push('A')
-        assertFalse(stk.isEmpty())
-        assertEquals('A', stk.top)
-        stk.push('B')
-        assertEquals('B', stk.top)
+    fun `using imutable stack`() {
+        val sut = Stack().push('A').push('B')
+        assertFalse(sut.isEmpty())
+        assertEquals('B',sut.top)
+        var stk = sut
         while (!stk.isEmpty()) {
-            println(stk.pop()) // -> B, A
+            println(stk.top)
+            stk = stk.pop()
         }
         assertTrue(stk.isEmpty())
+        assertFailsWith<NoSuchElementException> {
+            stk.top
+        }
     }
 }
