@@ -1,0 +1,49 @@
+@startuml
+
+interface Iterable<T> {
+    + iterator(): Iterator<T>
+}
+
+interface Stack<T> {
+    + push(item: T): Stack<T>
+    + pop(): Stack<T>
+    + isEmpty(): Boolean
+    + top: T
+}
+
+class Any {
+    + equals(other: Any?): Boolean
+    + hashCode(): Int
+}
+class Node<T> {
+    elem: T
+}
+Node "?" <-- Node : next
+Node <-- StackNotEmpty : head
+
+Stack <|.. StackEmpty
+Any <|-- StackEmpty
+Stack <|.. StackNotEmpty
+Any <|-- StackNotEmpty
+Iterable <|- Stack
+
+class StackEmpty<T> {
+    + push(item: T): Stack<T>
+    + pop(): Stack<T>
+    + isEmpty(): Boolean
+    + top: T
+    +iterator(): Iterator<T>
+    + equals(other: Any?): Boolean
+    + hashCode(): Int
+}
+
+class StackNotEmpty<T> {
+    + push(item: T): Stack<T>
+    + pop(): Stack<T>
+    + isEmpty(): Boolean
+    + top: T
+    +iterator(): Iterator<T>
+    + equals(other: Any?): Boolean
+    + hashCode(): Int
+}
+@enduml

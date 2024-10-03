@@ -13,39 +13,50 @@ class Stack<T> private constructor(private val head: Node<T>?) : Iterable<T> {
 
     fun pop2(): Pair<T,Stack<T>> = top to pop()
 
+/*
+    private inner class It: Iterator<T> {
+        var node: Node<T>? = head
+        override fun hasNext() = node!=null
+        override fun next(): T =
+            (node ?: throw NoSuchElementException())
+                .also { node = it.next }.elem
+    }
+*/
+
     /*
-    fun forEach(action: (T)->Unit ) {
-        var node = head
-        while (node!=null) {
-            action(node.elem)
-            node = node.next
+        override fun iterator(): Iterator<T> {
+            class It: Iterator<T> {
+                var node: Node<T>? = head
+                override fun hasNext() = node!=null
+                override fun next(): T =
+                    (node ?: throw NoSuchElementException())
+                        .also { node = it.next }.elem
+            }
+            return It()
         }
-    }
-    fun <U> map(conv: (T)->U) = buildList {
-        var node = head
-        while (node!=null) {
-            add(conv(node.elem))
-            node = node.next
-        }
-    }
     */
 
-    private class It<U>(var node: Node<U>?): Iterator<U> {
+    override fun iterator() = object : Iterator<T> {
+        var node: Node<T>? = head
         override fun hasNext() = node!=null
-        override fun next(): U =
+        override fun next(): T =
             (node ?: throw NoSuchElementException())
                 .also { node = it.next }.elem
     }
 
-    override fun iterator(): Iterator<T> = It(head)
-
-    /*
-    for( a in c ) print(a)
-    -- is compiled to --
-    val it = c.iterator()
-    while( it.hasNext() ) {
-       val a = it.next()
-       print(a)
+    companion object {
+        val values = listOf(1,2,3)
+        fun fx() { println("Stack") }
     }
-    */
+
+    override fun equals(other: Any?): Boolean {
+        if (other !is Stack<*>) return false
+        val it = iterator()
+        for(e in other)
+            if (!it.hasNext() || e != it.next()) return false
+        return !it.hasNext()
+    }
+
+    override fun hashCode(): Int =
+        this.fold(0){ h, e -> h*31 + e.hashCode()}
 }
