@@ -1,5 +1,5 @@
 import kotlin.test.*
-import oop.Stack
+import oop.*
 
 class BasicTestStack {
     @Test
@@ -58,5 +58,10 @@ class BasicTestStack {
         val sut2 = Stack<String>().push("ISEL").push("TDS")
         assertEquals(sut1,sut2)
         assertEquals(sut1.hashCode(),sut2.hashCode())
+    }
+
+    @Test fun `create stack with elements`() {
+        val sut1 = stackOf("IPL","ISEL","TDS")
+        assertEquals("TDS",sut1.top)
     }
 }

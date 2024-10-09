@@ -25,9 +25,9 @@ Stack <|.. StackEmpty
 Any <|-- StackEmpty
 Stack <|.. StackNotEmpty
 Any <|-- StackNotEmpty
-Iterable <|- Stack
+Iterable <|-- Stack
 
-class StackEmpty<T> {
+class StackEmpty<T> <<Object>>{
     + push(item: T): Stack<T>
     + pop(): Stack<T>
     + isEmpty(): Boolean
