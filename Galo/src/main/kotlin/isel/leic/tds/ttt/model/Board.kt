@@ -4,20 +4,19 @@ const val BOARD_DIM = 3
 const val BOARD_SIZE = BOARD_DIM * BOARD_DIM
 
 class Board(
-    val turn: Char,
-    val moves: List<Char> = List(BOARD_SIZE) { ' ' }
+    val turn: Player,
+    val moves: List<Player?> = List(BOARD_SIZE) { null }
 )
 
-fun Board.play(pos: Int): Board {
-    check(pos in 0 ..< BOARD_SIZE) { "Invalid position $pos" }
-    check(moves[pos] == ' ') { "Position already used" }
+fun Board.play(pos: Position): Board {
+    check(moves[pos.index] == null) { "Position already used" }
     return Board(
-        turn = if (turn=='X') 'O' else 'X',
-        moves.mapIndexed { idx, m -> if (idx==pos) turn else m }
+        turn = turn.other,
+        moves.mapIndexed { idx, m -> if (idx==pos.index) turn else m }
     )
 }
 
-fun Board.isWinner(p: Char): Boolean =
+fun Board.isWinner(p: Player): Boolean =
     // Columns
     (0..<BOARD_DIM).any { col ->
         (0..<BOARD_SIZE step BOARD_DIM).all { moves[col+it] == p }
@@ -31,4 +30,4 @@ fun Board.isWinner(p: Char): Boolean =
     // Reverse diagonal
     ((BOARD_DIM-1)..<BOARD_SIZE-1 step BOARD_DIM-1).all { moves[it] == p }
 
-fun Board.isDraw() = moves.all { it != ' ' }
+fun Board.isDraw() = moves.all { it != null }

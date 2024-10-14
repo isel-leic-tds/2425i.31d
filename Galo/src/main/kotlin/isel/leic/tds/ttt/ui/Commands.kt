@@ -10,9 +10,8 @@ abstract class Command(val syntaxArgs: String = "") {
 object PlayCommand: Command("<position>") {
     override fun execute(args: List<String>, board: Board?): Board {
         val arg = requireNotNull(args.firstOrNull()) {"Missing position"}
-        val pos = requireNotNull(arg.toIntOrNull()) {"Ivalid position $arg"}
         check(board!=null) { "No board" }
-        return board.play(pos)
+        return board.play(arg.toPosition())
     }
 }
 
@@ -20,7 +19,7 @@ fun getCommands() = mapOf(
     "PLAY" to PlayCommand,
     "NEW" to object : Command() {
         override fun execute(args: List<String>, board: Board?) =
-            Board(turn = 'X')
+            Board(turn = Player.X)
     },
     "EXIT" to object : Command() { override val toTerminate = true }
 )

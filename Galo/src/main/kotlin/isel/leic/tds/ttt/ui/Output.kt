@@ -8,15 +8,15 @@ fun Board.show() {
     repeat(BOARD_DIM) { line ->
         val startPos = line* BOARD_DIM
         for(pos in startPos ..< startPos+ BOARD_DIM) {
-            print(" ${moves[pos]} ")
+            print(" ${moves[pos]?:' '} ")
             if (pos == startPos+ BOARD_DIM -1) println()
             else print("|")
         }
         if (line < BOARD_DIM -1) println(sepLine)
     }
     when {
-        isWinner('X') -> println("Winner: X")
-        isWinner('O') -> println("Winner: O")
+        isWinner(Player.X) -> println("Winner: X")
+        isWinner(Player.O) -> println("Winner: O")
         isDraw() -> println("Draw")
         else -> println("turn: $turn")
     }
