@@ -8,17 +8,13 @@ class Board(
     val moves: List<Char> = List(BOARD_SIZE) { ' ' }
 )
 
-fun Board.canPlay(pos: Int) =
-    pos in 0 ..< BOARD_SIZE && moves[pos] == ' '
-
-fun Board.play(pos: Int) = Board(
-    turn = if (turn=='X') 'O' else 'X',
-    moves.mapIndexed { idx, m -> if (idx==pos) turn else m }
-)
-
-fun Board.tryPlay(pos: Int): Board {
-    check(canPlay(pos)) { "Invalid play in $pos" }
-    return play(pos)
+fun Board.play(pos: Int): Board {
+    check(pos in 0 ..< BOARD_SIZE) { "Invalid position $pos" }
+    check(moves[pos] == ' ') { "Position already used" }
+    return Board(
+        turn = if (turn=='X') 'O' else 'X',
+        moves.mapIndexed { idx, m -> if (idx==pos) turn else m }
+    )
 }
 
 fun Board.isWinner(p: Char): Boolean =
