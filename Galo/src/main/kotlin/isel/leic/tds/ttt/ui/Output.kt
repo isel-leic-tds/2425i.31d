@@ -5,19 +5,17 @@ import isel.leic.tds.ttt.model.*
 val sepLine = "---+".repeat(BOARD_DIM).dropLast(1)
 
 fun Board.show() {
-    repeat(BOARD_DIM) { line ->
-        val startPos = line* BOARD_DIM
-        for(pos in startPos ..< startPos+ BOARD_DIM) {
-            print(" ${moves[pos]?:' '} ")
-            if (pos == startPos+ BOARD_DIM -1) println()
-            else print("|")
+    Position.values.forEach { pos ->
+        print(" ${this[pos] ?:' '} ")
+        if (pos.col < BOARD_DIM-1) print('|')
+        else {
+            println()
+            if (pos.row < BOARD_DIM-1) println(sepLine)
         }
-        if (line < BOARD_DIM -1) println(sepLine)
     }
-    when {
-        isWinner(Player.X) -> println("Winner: X")
-        isWinner(Player.O) -> println("Winner: O")
-        isDraw() -> println("Draw")
-        else -> println("turn: $turn")
-    }
+    println( when {
+        winner!=null -> "Winner: $winner"
+        isDraw() -> "Draw"
+        else -> "turn: $turn"
+    } )
 }

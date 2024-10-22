@@ -1,0 +1,20 @@
+@startuml
+
+hide empty members
+
+class Board
+
+enum Player {
+    X,O
+}
+
+class Position {
+    index: Int
+}
+
+Board --> "0..9" Player : "moves "
+Board --> Player : "turn      "
+Board ..> Position : <<use>>
+Board --> "?" Player : winner
+
+@enduml
