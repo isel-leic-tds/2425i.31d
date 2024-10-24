@@ -2,7 +2,13 @@
 
 hide empty members
 
-class Board
+abstract class Board <<sealed>>
+Board <|-- BoardRun
+Board <|-- BoardWin
+Board <|-- BoardDraw
+
+Game *--> "?" Board: board
+Game -> Player : firstPlayer
 
 enum Player {
     X,O
@@ -12,9 +18,15 @@ class Position {
     index: Int
 }
 
-Board --> "0..9" Player : "moves "
-Board --> Player : "turn      "
-Board ..> Position : <<use>>
-Board --> "?" Player : winner
+<> Moves
+Board *-> "*" Moves : "moves"
+Position <-down- Moves : key
+Moves -> Player : value
+BoardRun -up-> Player : "turn       "
+BoardWin -up-> Player : winner
 
+<> Score
+Game *--> "3..*" Score : score
+Score --> Int : value
+Score -> "?" Player : key
 @enduml

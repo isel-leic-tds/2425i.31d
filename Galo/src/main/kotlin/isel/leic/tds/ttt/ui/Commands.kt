@@ -3,23 +3,26 @@ package isel.leic.tds.ttt.ui
 import isel.leic.tds.ttt.model.*
 
 abstract class Command(val syntaxArgs: String = "") {
-    open fun execute(args: List<String>, board: Board?): Board? = board
+    open fun execute(args: List<String>, game: Game): Game = game
     open val toTerminate: Boolean = false
 }
 
 object PlayCommand: Command("<position>") {
-    override fun execute(args: List<String>, board: Board?): Board {
+    override fun execute(args: List<String>, game: Game): Game {
         val arg = requireNotNull(args.firstOrNull()) {"Missing position"}
-        check(board!=null) { "No board" }
-        return board.play(arg.toPosition())
+        return game.play(arg.toPosition())
     }
 }
 
 fun getCommands() = mapOf(
     "PLAY" to PlayCommand,
     "NEW" to object : Command() {
-        override fun execute(args: List<String>, board: Board?) =
-            Board(turn = Player.X)
+        override fun execute(args: List<String>, game: Game) =
+            game.new()
     },
-    "EXIT" to object : Command() { override val toTerminate = true }
+    "EXIT" to object : Command() { override val toTerminate = true },
+    "SCORE" to object : Command() {
+        override fun execute(args: List<String>, game: Game) =
+            game.also { it.showScore() }
+    }
 )
