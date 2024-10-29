@@ -24,5 +24,7 @@ fun getCommands() = mapOf(
     "SCORE" to object : Command() {
         override fun execute(args: List<String>, game: Game) =
             game.also { it.showScore() }
-    }
+    },
+    //"SAVE" to ...,
+    //"LOAD" to ...,
 )
