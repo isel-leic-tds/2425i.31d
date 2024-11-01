@@ -1,0 +1,28 @@
+@startuml
+
+hide empty members
+
+interface Storage<K,D> {
+    create(:K,:D)
+    read(:K): D?
+    update(:K,:D)
+    delete(:K)
+}
+
+class MemoryStorage<K,D> {
+  -map:MutableMap
+}
+
+Storage <|.. MemoryStorage
+
+class TextFileStorage<K,D> {
+   - basePath
+}
+Storage <|.. TextFileStorage
+
+interface Serializer<D> {
+    serialize(:D): String
+    deserialize(:String):D
+}
+Serializer <-- TextFileStorage :serializer
+@enduml

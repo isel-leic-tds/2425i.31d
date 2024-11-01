@@ -13,6 +13,7 @@ value class Position private constructor(val index: Int) {
             return values[idx]
         }
     }
+    override fun toString() = "$index"
 }
 
 fun String.toPosition() = Position(

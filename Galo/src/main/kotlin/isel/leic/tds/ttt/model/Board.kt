@@ -6,7 +6,11 @@ const val BOARD_SIZE = BOARD_DIM * BOARD_DIM
 // Sealed hierarchy for board state (Run, Win and Draw)
 typealias Moves = Map<Position,Player>
 
-sealed class Board(val moves: Moves)
+sealed class Board(val moves: Moves) {
+    override fun equals(other: Any?): Boolean =
+        other is Board && moves == other.moves
+    override fun hashCode() = moves.hashCode()
+}
 class BoardRun(val turn: Player, moves: Moves = emptyMap()) : Board(moves)
 class BoardWin(moves: Moves, val winner: Player) : Board(moves)
 class BoardDraw(moves: Moves) : Board(moves)

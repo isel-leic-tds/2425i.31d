@@ -1,6 +1,7 @@
 package isel.leic.tds.storage
 
 import java.nio.file.NoSuchFileException
+import java.nio.file.Path
 import kotlin.io.path.*
 
 /**
@@ -18,32 +19,31 @@ class TextFileStorage<Key, Data: Any>(
     private val basePath = Path(baseFolderName)
     // Create base folder if it does not exist
     init {
-        if (! basePath.exists()) basePath.createDirectory()
-        else check(basePath.isDirectory()) { "$baseFolderName is not a directory" }
+        with(basePath) {
+            if (! exists()) createDirectory()
+            else check(isDirectory()) { "$name is not a directory" }
+        }
     }
 
-    private fun getFile(key: Key) = basePath / "$key.txt"
+    private fun <T> withPath(key: Key, fx: Path.()->T): T =
+        (basePath / "$key.txt").fx()
 
-    override fun create(key: Key, data: Data) {
-        val file = getFile(key)
-        check(! file.exists()) { "File $key.txt already exists" }
-        file.writeText( serializer.serialize(data) )
+    override fun create(key: Key, data: Data) = withPath(key){
+        check(! exists()) { "File $key.txt already exists" }
+        writeText( serializer.serialize(data) )
     }
 
-    override fun read(key: Key): Data? {
-        val file = getFile(key)
-        return try { serializer.deserialize(file.readText()) }
+    override fun read(key: Key): Data?  = withPath(key) {
+        try { serializer.deserialize(readText()) }
         catch (e: NoSuchFileException) { null }
     }
 
-    override fun update(key: Key, data: Data) {
-        val file = getFile(key)
-        check(file.exists()) { "File $key.txt not found" }
-        file.writeText( serializer.serialize(data) )
+    override fun update(key: Key, data: Data) = withPath(key){
+        check(exists()) { "File $key.txt not found" }
+        writeText( serializer.serialize(data) )
     }
 
-    override fun delete(key: Key) {
-        val file = getFile(key)
-        check(file.deleteIfExists()) { "File $key.txt not found" }
+    override fun delete(key: Key) = withPath(key){
+        check(deleteIfExists()) { "File $key.txt not found" }
     }
 }

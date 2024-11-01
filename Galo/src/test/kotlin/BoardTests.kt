@@ -2,6 +2,9 @@ import kotlin.test.*
 import isel.leic.tds.ttt.model.*
 import isel.leic.tds.ttt.ui.*
 
+fun playSequence(vararg moves: Int): Board =
+    moves.fold(BoardRun(Player.X) as Board) { b, idx -> b.play(Position(idx)) }
+
 class BoardTests {
     @Test
     fun testInitialBoard() {
@@ -9,9 +12,6 @@ class BoardTests {
         assertTrue(board.moves.isEmpty())
         assertEquals(Player.X, board.turn)
     }
-
-    private fun playSequence(vararg moves: Int): Board =
-        moves.fold(BoardRun(Player.X) as Board) { b, idx -> b.play(Position(idx)) }
 
     // All tests below assume BOARD_DIM is 3
     @Test
