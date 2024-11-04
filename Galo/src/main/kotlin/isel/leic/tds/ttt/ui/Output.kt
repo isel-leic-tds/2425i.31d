@@ -2,10 +2,11 @@ package isel.leic.tds.ttt.ui
 
 import isel.leic.tds.ttt.model.*
 
+fun Clash.showScore() = (this as? ClashRun)?.game?.showScore()
+
+fun Clash.show() = (this as? ClashRun)?.game?.show()
+
 fun Game.showScore() {
-/*  score.entries.forEach { (key,value) ->
-        println("${key?:"Draw"} = $value")
-    } */
     (Player.entries+null).forEach {
         println("${it?:"Draw"} = ${score[it]}")
     }

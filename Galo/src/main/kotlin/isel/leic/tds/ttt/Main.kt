@@ -5,17 +5,17 @@ import isel.leic.tds.ttt.model.*
 import isel.leic.tds.ttt.ui.*
 
 fun main() {
-    var game = Game() // Estado do tabuleiro
-    val storage = TextFileStorage<String,Game>("games",GameSerializer)
-    val cmds: Map<String,Command> = getCommands(storage)
+    val storage = TextFileStorage<Name,Game>("games",GameSerializer)
+    var clash = Clash(storage)
+    val cmds: Map<String,Command> = getCommands()
     while (true) {
         val (name, args) = readLineCommand()
         val cmd = cmds[name]
         if (cmd==null) println("Unknown command $name")
         else try {
-            game = cmd.execute(args,game)
+            clash = cmd.execute(args,clash)
             if( cmd.toTerminate ) break
-            game.show()
+            clash.show()
         } catch (e: IllegalStateException) {
             println(e.message)
         } catch (e: IllegalArgumentException) {
