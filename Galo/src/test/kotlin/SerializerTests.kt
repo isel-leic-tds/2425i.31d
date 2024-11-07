@@ -24,4 +24,20 @@ class SerializerTests {
         val otherBoard = BoardSerializer.deserialize(text)
         assertEquals(board, otherBoard)
     }
+    @Test fun `serialize and deserialize Game`() {
+        val game = Game(
+            board = playSequence(4, 0, 5, 1),
+            firstPlayer = Player.X,
+            score = mapOf(Player.X to 2, Player.O to 1, null to 4)
+        )
+        val text = GameSerializer.serialize(game)
+        val expected = """
+            X:2 O:1 null:4
+            X
+            RUN X | 4:X 0:O 5:X 1:O
+        """.trimIndent()
+        assertEquals(expected, text.trim())
+        val otherGame = GameSerializer.deserialize(text)
+        assertEquals(game, otherGame)
+    }
 }

@@ -24,7 +24,7 @@ class ClashRun(
 ) : Clash(st)
 
 fun Clash.start(id : Name): Clash {
-    val game = Game(firstPlayer = Player.X)
+    val game = Game(firstPlayer = Player.X).new()
     st.create(id,game)
     return ClashRun(st, game, Player.X, id)
 }

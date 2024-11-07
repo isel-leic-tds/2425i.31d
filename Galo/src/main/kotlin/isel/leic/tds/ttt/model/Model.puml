@@ -14,19 +14,35 @@ enum Player {
     X,O
 }
 
-class Position {
+class Position <<value>>{
     index: Int
 }
 
 <> Moves
 Board *-> "*" Moves : "moves"
-Position <-down- Moves : key
+Position <-up- Moves : key
 Moves -> Player : value
 BoardRun -up-> Player : "turn       "
 BoardWin -up-> Player : winner
 
-<> Score
-Game *--> "3..*" Score : score
-Score --> Int : value
-Score -> "?" Player : key
+class Game{
+  score: Map<Player,Int>
+}
+'<> Score
+'Game *--> "3..*" Score : score
+'Score --> Int : value
+'Score -> "?" Player : key
+
+Clash *-right-> GameStorage : storage
+Clash <|-- ClashRun
+ClashRun --> Player : sidePlayer
+ClashRun *-right-> Game : game
+ClashRun *-left-> Name : id
+class Name <<value>>{
+  value: String
+}
+
+interface Storage<K,D>
+Storage <|-left- GameStorage : K=Name\nD=Board
+hide GameStorage circle
 @enduml

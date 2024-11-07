@@ -4,7 +4,11 @@ import isel.leic.tds.ttt.model.*
 
 fun Clash.showScore() = (this as? ClashRun)?.game?.showScore()
 
-fun Clash.show() = (this as? ClashRun)?.game?.show()
+fun Clash.show() {
+    val clash = this as? ClashRun ?: return
+    println("Clash: ${clash.id} you are ${clash.sidePlayer}")
+    clash.game.show()
+}
 
 fun Game.showScore() {
     (Player.entries+null).forEach {
