@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.*
 import isel.leic.tds.ttt.model.*
 
 @Composable
-fun StatusBar(board: Board) {
+fun StatusBar(board: Board?) {
     Row(
         modifier = Modifier.width(GRID_WIDTH).background(Color.LightGray),
         verticalAlignment = Alignment.CenterVertically,
@@ -22,9 +22,10 @@ fun StatusBar(board: Board) {
             is BoardRun -> "Turn: " to board.turn
             is BoardWin -> "Winner: " to board.winner
             is BoardDraw -> "Draw" to null
+            null -> "No board" to null
         }
         Text(state, fontSize = 32.sp)
-        Player(player, modifier = Modifier.size(32.dp))
+        player?.let { Player(it, modifier = Modifier.size(32.dp)) }
     }
 }
 

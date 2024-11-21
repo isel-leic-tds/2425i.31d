@@ -10,12 +10,12 @@ import androidx.compose.ui.unit.dp
 
 import isel.leic.tds.ttt.model.*
 
-val CELL_SIZE = 100.dp
+val CELL_SIZE = 150.dp
 val LINE_WIDTH = 5.dp
 val GRID_WIDTH = CELL_SIZE * BOARD_DIM + LINE_WIDTH * (BOARD_DIM-1)
 
 @Composable
-fun Grid(board: Board, onClickCell: (Position)->Unit ) {
+fun Grid(board: Board?, onClickCell: (Position)->Unit ) {
     Column(
         modifier = Modifier.size(GRID_WIDTH).background(Color.Black),
         verticalArrangement = Arrangement.SpaceBetween
@@ -28,7 +28,7 @@ fun Grid(board: Board, onClickCell: (Position)->Unit ) {
                 repeat(BOARD_DIM) { col ->
                     val pos = Position(lin * BOARD_DIM+col)
                     Player(
-                        player = board[pos],
+                        player = board?.get(pos),
                         onClick= { onClickCell(pos) },
                         modifier = Modifier.size(CELL_SIZE).background(Color.White)
                     )
