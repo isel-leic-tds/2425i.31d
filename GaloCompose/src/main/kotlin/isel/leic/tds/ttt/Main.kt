@@ -12,6 +12,7 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.application
 import isel.leic.tds.ttt.ui.Grid
+import isel.leic.tds.ttt.ui.NameEdit
 import isel.leic.tds.ttt.ui.ScoreDialog
 import isel.leic.tds.ttt.ui.StatusBar
 import isel.leic.tds.ttt.ui.TTTViewModel
@@ -28,6 +29,7 @@ private fun FrameWindowScope.TTTApp(onExit: () -> Unit) {
         }
         if (vm.scoreView)
             ScoreDialog(vm.score, onClose= vm::hideScore)
+        vm.action?.let { NameEdit(it, vm::cancelAction, vm::doAction ) }
     }
 }
 
@@ -35,14 +37,14 @@ private fun FrameWindowScope.TTTApp(onExit: () -> Unit) {
 fun FrameWindowScope.TTTMenu(vm: TTTViewModel, onExit: ()->Unit) {
     MenuBar {
         Menu("Game") {
-            Item("New board", onClick = vm::newBoard)
-            Item("Score", onClick = vm::showScore)
+            Item("New board", enabled = vm.hasClash, onClick = vm::newBoard)
+            Item("Score",  enabled = vm.hasClash, onClick = vm::showScore)
             Item("Exit", onClick = onExit )
-            Item("Refresh", onClick = {}) //vm::refresh
+            Item("Refresh",  enabled = vm.hasClash, onClick = vm::refresh)
         }
         Menu("Clash") {
-            Item("Start", onClick = {} )//vm::start)
-            Item("Join", onClick = {} )//vm::join)
+            Item("Start", onClick = vm::start)
+            Item("Join", onClick = vm::join)
         }
     }
 }

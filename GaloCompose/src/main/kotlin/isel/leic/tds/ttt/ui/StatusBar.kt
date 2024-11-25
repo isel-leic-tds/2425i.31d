@@ -18,6 +18,7 @@ fun StatusBar(board: Board?) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
+        // TODO: Show player of this side.
         val (state,player) = when(board) {
             is BoardRun -> "Turn: " to board.turn
             is BoardWin -> "Winner: " to board.winner

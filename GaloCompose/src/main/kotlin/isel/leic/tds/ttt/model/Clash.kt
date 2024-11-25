@@ -8,7 +8,7 @@ value class Name(private val value: String) {
     override fun toString() = value
     companion object {
         fun isValid(value: String) =
-            value.isNotEmpty() && value.all { it.isLetterOrDigit() } && value.none { it==' ' }
+            value.isNotEmpty() && value.all { it.isLetterOrDigit() }
     }
 }
 

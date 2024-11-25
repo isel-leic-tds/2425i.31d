@@ -20,12 +20,9 @@ import isel.leic.tds.ttt.model.Score
 
 @Composable
 @Preview
-// It is not yet possible to preview Dialogs on the desktop
-// because they assume that there is a base Window.
 fun ScoreDialogPreview()  {
-        ScoreDialog(
-            score = (Player.entries+null).associateWith { 0 },
-            onClose = { }
+        ScoreContent(
+            score = (Player.entries+null).associateWith { 1 },
         )
     }
 
@@ -39,21 +36,24 @@ fun ScoreDialog(
         TextButton(onClick = onClose) { Text("Close") }
     },
     title = { Text("Score", style = MaterialTheme.typography.h3) },
-    text = {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ){
-            Column {
-                Player.entries.forEach {
-                    Row{
-                        Player(it, modifier = Modifier.size(32.dp))
-                        Text(" - ${score[it]}", style = MaterialTheme.typography.h4)
-                    }
+    text = { ScoreContent(score) }
+)
+
+@Composable
+private fun ScoreContent(score: Score) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Column {
+            Player.entries.forEach {
+                Row {
+                    Player(it, modifier = Modifier.size(32.dp))
+                    Text(" - ${score[it]}", style = MaterialTheme.typography.h4)
                 }
             }
-            Text("Draws - ${score[null]}", style = MaterialTheme.typography.h5)
         }
+        Text("Draws - ${score[null]}", style = MaterialTheme.typography.h5)
     }
-)
+}
 
