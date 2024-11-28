@@ -12,13 +12,17 @@ import androidx.compose.ui.unit.*
 import isel.leic.tds.ttt.model.*
 
 @Composable
-fun StatusBar(board: Board?) {
+fun StatusBar(board: Board?, you: Player?) {
     Row(
         modifier = Modifier.width(GRID_WIDTH).background(Color.LightGray),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
-        // TODO: Show player of this side.
+        you?.let {
+            Text("You: ", fontSize = 32.sp)
+            Player(it,modifier = Modifier.size(32.dp))
+            Spacer(Modifier.width(32.dp))
+        }
         val (state,player) = when(board) {
             is BoardRun -> "Turn: " to board.turn
             is BoardWin -> "Winner: " to board.winner
@@ -33,5 +37,5 @@ fun StatusBar(board: Board?) {
 @Composable
 @Preview
 fun StatusBarPreview() {
-    StatusBar(BoardRun(Player.X))
+    StatusBar(BoardRun(Player.X), Player.O)
 }

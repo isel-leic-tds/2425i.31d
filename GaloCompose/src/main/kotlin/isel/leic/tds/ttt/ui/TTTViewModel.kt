@@ -12,11 +12,11 @@ class TTTViewModel {
     val hasClash: Boolean get() = clash is ClashRun
     val board: Board? get() = (clash as? ClashRun)?.game?.board
     val score get() = (clash as ClashRun).game.score
+    val sidePlayer get() = (clash as? ClashRun)?.sidePlayer
 
-    fun play(pos: Position) {
-        if (board is BoardRun) clash = clash.play(pos)
-    }
-    fun newBoard() { clash = clash.newBoard() }
+    fun exit() { clash.exit() }
+    fun play(pos: Position) = exec{ play(pos) }
+    fun newBoard() = exec(Clash::newBoard)
 
     // UI State
     var scoreView by mutableStateOf(false)
@@ -27,15 +27,29 @@ class TTTViewModel {
 
     var action: Action? by mutableStateOf(null)
         private set
-    fun refresh() { clash = clash.refresh() }
+    fun refresh() = exec( Clash::refresh )
     fun start() { action = Action.START }
     fun join() { action = Action.JOIN }
     fun cancelAction() { action = null }
     fun doAction(name: Name) {
-        clash = when(action as Action) {
-            Action.START -> clash.start(name)
-            Action.JOIN -> clash.join(name)
-        }
+        exec{ when(action as Action) {
+            Action.START -> start(name)
+            Action.JOIN -> join(name)
+        } }
         action = null
+    }
+
+    var message: String? by mutableStateOf(null)
+        private set
+    fun cancelMessage() { message = null }
+
+    private fun exec( fx: Clash.()->Clash ) {
+        try { clash = clash.fx() }
+        catch(ex: Exception) {
+            if (ex is IllegalArgumentException ||
+                ex is IllegalStateException
+            ) message = ex.message
+            else throw ex
+        }
     }
 }

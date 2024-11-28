@@ -6,30 +6,20 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.unit.DpSize
-import androidx.compose.ui.window.FrameWindowScope
-import androidx.compose.ui.window.MenuBar
-import androidx.compose.ui.window.Window
-import androidx.compose.ui.window.WindowState
-import androidx.compose.ui.window.application
-import isel.leic.tds.ttt.ui.Grid
-import isel.leic.tds.ttt.ui.NameEdit
-import isel.leic.tds.ttt.ui.ScoreDialog
-import isel.leic.tds.ttt.ui.StatusBar
-import isel.leic.tds.ttt.ui.TTTViewModel
+import androidx.compose.ui.window.*
+import isel.leic.tds.ttt.ui.*
 
 @Composable
 @Preview
-private fun FrameWindowScope.TTTApp(onExit: () -> Unit) {
-    val vm = remember{ TTTViewModel() }
-    TTTMenu(vm, onExit= onExit)
+private fun FrameWindowScope.TTTApp(vm: TTTViewModel) {
     MaterialTheme {
         Column {
             Grid(vm.board, onClickCell = { pos -> vm.play(pos) })
-            StatusBar(vm.board)
+            StatusBar(vm.board, vm.sidePlayer)
         }
-        if (vm.scoreView)
-            ScoreDialog(vm.score, onClose= vm::hideScore)
+        if (vm.scoreView) ScoreDialog(vm.score, onClose= vm::hideScore)
         vm.action?.let { NameEdit(it, vm::cancelAction, vm::doAction ) }
+        vm.message?.let { Message(it, vm::cancelMessage) }
     }
 }
 
@@ -50,11 +40,14 @@ fun FrameWindowScope.TTTMenu(vm: TTTViewModel, onExit: ()->Unit) {
 }
 
 fun main() = application {
+    val vm = remember{ TTTViewModel() }
+    val onExit = { vm.exit(); exitApplication() }
     Window(
-        onCloseRequest = ::exitApplication,
+        onCloseRequest = onExit,
         state = WindowState(size = DpSize.Unspecified),
         title = "Tic Tac Toe"
     ) {
-        TTTApp(onExit = ::exitApplication)
+        TTTMenu(vm, onExit)
+        TTTApp(vm)
     }
 }

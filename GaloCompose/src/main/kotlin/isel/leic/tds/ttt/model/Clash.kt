@@ -23,15 +23,26 @@ class ClashRun(
     val id: Name,
 ) : Clash(st)
 
+private fun Clash.removeIfStarted() {
+    if (this is ClashRun && sidePlayer==Player.X)
+        st.delete(this.id)
+}
+
 fun Clash.start(id : Name): Clash {
+    removeIfStarted()
     val game = Game(firstPlayer = Player.X).new()
     st.create(id,game)
     return ClashRun(st, game, Player.X, id)
 }
 
 fun Clash.join(id : Name): Clash {
+    removeIfStarted()
     val game = requireNotNull(st.read(id)) { "Clash not started" }
     return ClashRun(st, game, Player.O, id)
+}
+
+fun Clash.exit() {
+    removeIfStarted()
 }
 
 private fun Clash.runOper( oper: ClashRun.()->Game ): Clash {
