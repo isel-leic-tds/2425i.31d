@@ -50,8 +50,12 @@ private fun Clash.runOper( oper: ClashRun.()->Game ): Clash {
     return ClashRun(st,oper(),sidePlayer,id)
 }
 
+class NoModificationException(name: Name): IllegalStateException("No modification on $name")
+class GameDeletedException(name: Name): IllegalStateException("Game $name deleted")
+
 fun Clash.refresh() = runOper {
-    (st.read(id) as Game).also { check(game!=it) { "No modification" } }
+    (st.read(id) ?: throw GameDeletedException(id))
+        .also { if (game == it) throw NoModificationException(id) }
 }
 
 fun Clash.newBoard() = runOper {
@@ -64,3 +68,9 @@ fun Clash.play(pos: Position) = runOper {
         st.update(id,it)
     }
 }
+
+val Clash.isSideTurn: Boolean get() =
+    (this is ClashRun) && sidePlayer == when(game.board) {
+        is BoardRun -> game.board.turn
+        else -> game.firstPlayer
+    }
