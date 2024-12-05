@@ -2,17 +2,11 @@ package isel.leic.tds.ttt
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.*
 import androidx.compose.ui.unit.DpSize
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.*
+import isel.leic.tds.storage.MongoDriver
 import isel.leic.tds.ttt.ui.*
 
 @Composable
@@ -46,16 +40,20 @@ fun FrameWindowScope.TTTMenu(vm: TTTViewModel, onExit: ()->Unit) {
     }
 }
 
-fun main() = application {
-    val scope = rememberCoroutineScope()
-    val vm = remember{ TTTViewModel(scope) }
-    val onExit = { vm.exit(); exitApplication() }
-    Window(
-        onCloseRequest = onExit,
-        state = WindowState(size = DpSize.Unspecified),
-        title = "Tic Tac Toe"
-    ) {
-        TTTMenu(vm, onExit)
-        TTTApp(vm)
+fun main() {
+    MongoDriver("test").use { driver ->
+        application(exitProcessOnExit = false) {
+            val scope = rememberCoroutineScope()
+            val vm = remember { TTTViewModel(scope,driver) }
+            val onExit = { vm.exit(); exitApplication() }
+            Window(
+                onCloseRequest = onExit,
+                state = WindowState(size = DpSize.Unspecified),
+                title = "Tic Tac Toe"
+            ) {
+                TTTMenu(vm, onExit)
+                TTTApp(vm)
+            }
+        }
     }
 }

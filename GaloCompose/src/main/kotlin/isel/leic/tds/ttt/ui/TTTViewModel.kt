@@ -1,6 +1,7 @@
 package isel.leic.tds.ttt.ui
 
 import androidx.compose.runtime.*
+import isel.leic.tds.storage.*
 import isel.leic.tds.storage.TextFileStorage
 import isel.leic.tds.ttt.model.*
 import kotlinx.coroutines.CoroutineScope
@@ -8,8 +9,9 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class TTTViewModel(val scope: CoroutineScope) {
-    val storage = TextFileStorage<Name,Game>("games",GameSerializer)
+class TTTViewModel(val scope: CoroutineScope, driver: MongoDriver) {
+    // val storage = TextFileStorage<Name,Game>("games",GameSerializer)
+    val storage = MongoStorage<Name,Game>("games",driver,GameSerializer)
     // Model State
     private var clash: Clash by mutableStateOf(Clash(storage))
 
