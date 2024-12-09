@@ -1,0 +1,22 @@
+@startuml
+hide empty members
+enum Player
+enum Points
+interface Score
+
+class ByPoints
+Score <|.. ByPoints
+Points --o ByPoints : pointsA
+Points --o ByPoints : pointsB
+
+class Advantage
+Score <|.. Advantage
+Player --o Advantage : player
+
+class Game
+Score <|.. Game
+Player --o Game : winner
+
+class Deuce <<(O,orange)>>
+Score <|.. Deuce
+@enduml

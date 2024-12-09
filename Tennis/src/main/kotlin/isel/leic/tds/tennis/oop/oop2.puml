@@ -1,0 +1,60 @@
+@startuml
+hide empty members
+
+enum Player {
+   + {static} A
+   + {static} B
+}
+
+enum Points {
+   value: Int
+   {static} LOVE
+   {static} FIFTEEN
+   {static} THIRTY
+   next(): Points
+}
+
+interface Score{
+   placard: String
+   isGame: Boolean = false
+   {abstract} next(): Score
+}
+
+class ByPoints {
+   placard = "$A - $B"
+   next(): Score
+}
+Score <|-- ByPoints
+Points --* ByPoints : pointsA
+Points --* ByPoints : pointsB
+class Advantage {
+   placard = "Advantage $W"
+   next(): Score
+}
+Score <|-- Advantage
+Player --o Advantage : player
+
+class Game {
+   placard = "Game $W"
+   next() = throw
+   isGame = true
+}
+Score <|--- Game
+Player --o Game : winner
+
+class Deuce <<(O,orange)>> {
+   placard = "Deuce"
+   next(): Score
+}
+Score <|- Deuce : "          "
+
+class Forty {
+   placard = "$A - 40" | "40 - $B"
+   next(): Score
+}
+Score <|--- Forty
+Player --o Forty : player
+Points --* Forty : pointsOther
+
+@enduml
+
